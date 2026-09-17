@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#172d24">
+    <meta name="description" content="Escolha a camisa da próxima turma.">
+    <title>Qual camisa representa a nossa turma?</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="grain" aria-hidden="true"></div>
+    <header class="site-header">
+      <a class="brand" href="./" aria-label="Enquete da turma — início">
+        <span class="brand-mark">E</span>
+        <span>enquete<br><em>da turma</em></span>
+      </a>
+      <p class="edition">Votação aberta <span aria-hidden="true">✦</span> 2026</p>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="page-title">
+        <div class="hero-copy">
+          <p class="eyebrow"><span></span> decisão coletiva</p>
+          <h1 id="page-title">Qual camisa<br><i>representa</i> a nossa turma?</h1>
+          <p class="intro">Sete ideias, uma escolha. Selecione o modelo que mais tem a nossa cara e deixe seu voto contar.</p>
+        </div>
+        <div class="hero-note" aria-hidden="true">
+          <span class="scribble">a escolha<br>é nossa</span>
+          <span class="arrow">↘</span>
+        </div>
+      </section>
+
+      <section class="poll" aria-labelledby="options-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow"><span></span> escolha uma opção</p>
+            <h2 id="options-title">As candidatas</h2>
+          </div>
+          <p class="selection-status" id="selectionStatus" role="status" aria-live="polite">Nenhuma camisa selecionada</p>
+        </div>
+
+        <form id="pollForm">
+          <fieldset class="shirt-grid">
+            <legend class="sr-only">Escolha uma das sete camisas</legend>
+            <label class="shirt-card" for="shirt-1">
+              <input type="radio" name="shirt" id="shirt-1" value="1">
+              <span class="card-image"><img src="img/camisa-1.jpeg" alt="Camisa candidata 1" loading="eager"><span class="check" aria-hidden="true">✓</span></span>
+              <span class="card-meta"><span class="shirt-name">Modelo 01</span><span class="card-number">01</span></span>
+            </label>
+            <label class="shirt-card" for="shirt-2">
+              <input type="radio" name="shirt" id="shirt-2" value="2">
+              <span class="card-image"><img src="img/camisa-2.jpeg" alt="Camisa candidata 2" loading="lazy"><span class="check" aria-hidden="true">✓</span></span>
+              <span class="card-meta"><span class="shirt-name">Modelo 02</span><span class="card-number">02</span></span>
+            </label>
+            <label class="shirt-card" for="shirt-3">
+              <input type="radio" name="shirt" id="shirt-3" value="3">
+              <span class="card-image"><img src="img/camisa-3.jpeg" alt="Camisa candidata 3" loading="lazy"><span class="check" aria-hidden="true">✓</span></span>
+              <span class="card-meta"><span class="shirt-name">Modelo 03</span><span class="card-number">03</span></span>
+            </label>
+            <label class="shirt-card" for="shirt-4">
+              <input type="radio" name="shirt" id="shirt-4" value="4">
+              <span class="card-image"><img src="img/camisa-4.jpeg" alt="Camisa candidata 4" loading="lazy"><span class="check" aria-hidden="true">✓</span></span>
+              <span class="card-meta"><span class="shirt-name">Modelo 04</span><span class="card-number">04</span></span>
+            </label>
+            <label class="shirt-card" for="shirt-5">
+              <input type="radio" name="shirt" id="shirt-5" value="5">
+              <span class="card-image"><img src="img/camisa-5.jpeg" alt="Camisa candidata 5" loading="lazy"><span class="check" aria-hidden="true">✓</span></span>
+              <span class="card-meta"><span class="shirt-name">Modelo 05</span><span class="card-number">05</span></span>
+            </label>
+            <label class="shirt-card" for="shirt-6">
+              <input type="radio" name="shirt" id="shirt-6" value="6">
+              <span class="card-image"><img src="img/camisa-6.jpeg" alt="Camisa candidata 6" loading="lazy"><span class="check" aria-hidden="true">✓</span></span>
+              <span class="card-meta"><span class="shirt-name">Modelo 06</span><span class="card-number">06</span></span>
+            </label>
+            <label class="shirt-card" for="shirt-7">
+              <input type="radio" name="shirt" id="shirt-7" value="7">
+              <span class="card-image"><img src="img/camisa-7.jpeg" alt="Camisa candidata 7" loading="lazy"><span class="check" aria-hidden="true">✓</span></span>
+              <span class="card-meta"><span class="shirt-name">Modelo 07</span><span class="card-number">07</span></span>
+            </label>
+          </fieldset>
+          <div class="poll-actions">
+            <p class="hint"><span aria-hidden="true">⌁</span> Você poderá votar uma vez neste dispositivo.</p>
+            <button class="vote-button" type="submit">Confirmar meu voto <span aria-hidden="true">→</span></button>
+          </div>
+        </form>
+
+        <section class="success" id="success" hidden tabindex="-1" aria-labelledby="success-title">
+          <div class="success-icon" aria-hidden="true">✓</div>
+          <div><p class="eyebrow"><span></span> recebido com carinho</p><h2 id="success-title">Voto confirmado!</h2><p>Obrigado por ajudar a decidir. A camisa <strong id="votedShirt">—</strong> recebeu seu voto.</p></div>
+          <button class="secondary-button" id="showResults" type="button">Ver resultado parcial</button>
+        </section>
+        <section class="results" id="results" hidden aria-labelledby="results-title">
+          <div class="results-heading"><div><p class="eyebrow"><span></span> placar local</p><h2 id="results-title">Resultado parcial</h2></div><span id="totalVotes" class="total-votes"></span></div>
+          <div id="bars" class="bars"></div>
+          <p class="fine-print">Contagem demonstrativa, salva apenas neste navegador — não é uma votação centralizada.</p>
+        </section>
+      </section>
+    </main>
+    <footer><span>feito para a nossa turma</span><span>✦</span><span>cada escolha importa</span></footer>
+    <script src="script.js"></script>
+  </body>
+</html>
