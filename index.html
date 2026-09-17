@@ -79,6 +79,11 @@
               <span class="card-meta"><span class="shirt-name">Modelo 07</span><span class="card-number">07</span></span>
             </label>
           </fieldset>
+          <div class="voter-field">
+            <label for="studentName">Seu nome <span aria-hidden="true">*</span></label>
+            <input type="text" id="studentName" name="studentName" autocomplete="name" required maxlength="80" placeholder="Como podemos chamar você?">
+            <p class="field-message" id="nameMessage" aria-live="polite"></p>
+          </div>
           <div class="poll-actions">
             <p class="hint"><span aria-hidden="true">⌁</span> Você poderá votar uma vez neste dispositivo.</p>
             <button class="vote-button" type="submit">Confirmar meu voto <span aria-hidden="true">→</span></button>
@@ -87,7 +92,7 @@
 
         <section class="success" id="success" hidden tabindex="-1" aria-labelledby="success-title">
           <div class="success-icon" aria-hidden="true">✓</div>
-          <div><p class="eyebrow"><span></span> recebido com carinho</p><h2 id="success-title">Voto confirmado!</h2><p>Obrigado por ajudar a decidir. A camisa <strong id="votedShirt">—</strong> recebeu seu voto.</p></div>
+          <div><p class="eyebrow"><span></span> recebido com carinho</p><h2 id="success-title">Voto confirmado!</h2><p><strong id="votedName">—</strong>, seu voto na camisa <strong id="votedShirt">—</strong> foi registrado neste dispositivo.</p></div>
           <button class="secondary-button" id="showResults" type="button">Ver resultado parcial</button>
         </section>
         <section class="results" id="results" hidden aria-labelledby="results-title">

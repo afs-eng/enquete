@@ -3,6 +3,8 @@
   const status = document.querySelector('#selectionStatus');
   const success = document.querySelector('#success');
   const results = document.querySelector('#results');
+  const nameInput = document.querySelector('#studentName');
+  const nameMessage = document.querySelector('#nameMessage');
   const countsKey = 'enquete-camisas-contagem';
   const votedKey = 'enquete-camisas-voto';
   const defaultCounts = [18, 27, 14, 22, 11, 19, 16];
@@ -13,6 +15,10 @@
     status.textContent = 'Camisa ' + number.padStart(2, '0') + ' selecionada';
   });
 
+  nameInput.addEventListener('invalid', function () {
+    nameMessage.textContent = 'Informe seu nome para confirmar o voto.';
+  });
+
   form.addEventListener('submit', function (event) {
     event.preventDefault();
     const selected = form.querySelector('input:checked');
@@ -21,12 +27,22 @@
       status.classList.add('needs-choice');
       return;
     }
+    const name = nameInput.value.trim();
+    if (!name) {
+      nameInput.setCustomValidity('Informe seu nome para votar.');
+      nameMessage.textContent = 'Informe seu nome para confirmar o voto.';
+      nameInput.focus();
+      return;
+    }
+    nameInput.setCustomValidity('');
+    nameMessage.textContent = '';
     const number = Number(selected.value);
     if (!localStorage.getItem(votedKey)) {
       counts[number - 1] += 1;
       localStorage.setItem(countsKey, JSON.stringify(counts));
-      localStorage.setItem(votedKey, String(number));
+      localStorage.setItem(votedKey, JSON.stringify({ number: number, name: name }));
     }
+    document.querySelector('#votedName').textContent = name;
     document.querySelector('#votedShirt').textContent = 'Modelo ' + String(number).padStart(2, '0');
     success.hidden = false;
     form.querySelector('.poll-actions').hidden = true;
@@ -50,11 +66,16 @@
 
   const previousVote = localStorage.getItem(votedKey);
   if (previousVote) {
-    const option = document.querySelector('#shirt-' + previousVote);
+    let record;
+    try { record = JSON.parse(previousVote); } catch (error) { record = { number: previousVote, name: 'Este aluno' }; }
+    const option = document.querySelector('#shirt-' + record.number);
     if (option) {
       option.checked = true;
-      status.textContent = 'Seu voto já foi registrado neste dispositivo';
-      document.querySelector('#votedShirt').textContent = 'Modelo ' + String(previousVote).padStart(2, '0');
+      status.textContent = (record.name || 'Este aluno') + ', seu voto já foi registrado neste dispositivo';
+      nameInput.value = record.name || '';
+      nameInput.disabled = true;
+      document.querySelector('#votedName').textContent = record.name || 'Este aluno';
+      document.querySelector('#votedShirt').textContent = 'Modelo ' + String(record.number).padStart(2, '0');
       success.hidden = false;
       form.querySelector('.poll-actions').hidden = true;
     }
