@@ -5,9 +5,9 @@
   const results = document.querySelector('#results');
   const nameInput = document.querySelector('#studentName');
   const nameMessage = document.querySelector('#nameMessage');
-  const countsKey = 'enquete-camisas-contagem';
-  const votedKey = 'enquete-camisas-voto';
-  const defaultCounts = [18, 27, 14, 22, 11, 19, 16];
+  const countsKey = 'enquete-camisas-contagem-v2';
+  const votedKey = 'enquete-camisas-voto-v2';
+  const defaultCounts = Array(7).fill(0);
   let counts = JSON.parse(localStorage.getItem(countsKey) || 'null') || defaultCounts.slice();
 
   form.addEventListener('change', function (event) {
@@ -57,9 +57,9 @@
 
   function renderResults() {
     const total = counts.reduce((sum, value) => sum + value, 0);
-    document.querySelector('#totalVotes').textContent = total + ' votos demonstrativos';
+    document.querySelector('#totalVotes').textContent = total + (total === 1 ? ' voto neste navegador' : ' votos neste navegador');
     document.querySelector('#bars').innerHTML = counts.map(function (count, index) {
-      const percent = Math.round((count / Math.max(...counts)) * 100);
+      const percent = Math.round((count / Math.max(...counts, 1)) * 100);
       return '<div class="bar-row"><span>Modelo ' + String(index + 1).padStart(2, '0') + '</span><span class="bar-track"><span class="bar-fill" style="width:' + percent + '%"></span></span><strong>' + count + '</strong></div>';
     }).join('');
   }
