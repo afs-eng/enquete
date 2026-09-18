@@ -81,28 +81,40 @@
           </fieldset>
           <div class="voter-field">
             <label for="studentName">Seu nome <span aria-hidden="true">*</span></label>
-            <input type="text" id="studentName" name="studentName" autocomplete="name" required maxlength="80" placeholder="Como podemos chamar você?">
+            <input type="text" id="studentName" name="studentName" autocomplete="name" required maxlength="80" aria-describedby="nameMessage" placeholder="Como podemos chamar você?">
             <p class="field-message" id="nameMessage" aria-live="polite"></p>
           </div>
+          <div class="voter-field">
+            <label for="studentEmail">Seu e-mail <span aria-hidden="true">*</span></label>
+            <input type="email" id="studentEmail" name="studentEmail" autocomplete="email" required maxlength="254" aria-describedby="emailMessage" placeholder="seuemail@exemplo.com">
+            <p class="field-message" id="emailMessage">Confirme seu e-mail pelo link recebido antes de votar.</p>
+            <p class="email-instruction">Você precisa confirmar o e-mail pelo link que receber antes de registrar seu voto.</p>
+            <p class="auth-status" id="authStatus" aria-live="polite">Informe seu e-mail para receber o link de confirmação.</p>
+          </div>
           <div class="poll-actions">
-            <p class="hint"><span aria-hidden="true">⌁</span> Você poderá votar uma vez neste dispositivo.</p>
-            <button class="vote-button" type="submit">Confirmar meu voto <span aria-hidden="true">→</span></button>
+            <p class="hint"><span aria-hidden="true">⌁</span> Cada aluno pode registrar um voto na votação da turma.</p>
+            <div class="action-buttons">
+              <button class="vote-button" type="submit">Enviar link de confirmação <span aria-hidden="true">→</span></button>
+              <button class="secondary-button change-email" id="changeEmail" type="button" hidden>Trocar e-mail / sair</button>
+            </div>
           </div>
         </form>
 
         <section class="success" id="success" hidden tabindex="-1" aria-labelledby="success-title">
           <div class="success-icon" aria-hidden="true">✓</div>
-          <div><p class="eyebrow"><span></span> recebido com carinho</p><h2 id="success-title">Voto confirmado!</h2><p><strong id="votedName">—</strong>, seu voto na camisa <strong id="votedShirt">—</strong> foi registrado neste dispositivo.</p></div>
+          <div><p class="eyebrow"><span></span> recebido com carinho</p><h2 id="success-title">Voto confirmado!</h2><p><strong id="votedName">—</strong>, seu voto na camisa <strong id="votedShirt">—</strong> foi registrado na votação centralizada da turma.</p></div>
           <button class="secondary-button" id="showResults" type="button">Ver resultado parcial</button>
         </section>
         <section class="results" id="results" hidden aria-labelledby="results-title">
-          <div class="results-heading"><div><p class="eyebrow"><span></span> placar local</p><h2 id="results-title">Resultado parcial</h2></div><span id="totalVotes" class="total-votes"></span></div>
+          <div class="results-heading"><div><p class="eyebrow"><span></span> placar da turma</p><h2 id="results-title">Resultado parcial</h2></div><span id="totalVotes" class="total-votes"></span></div>
           <div id="bars" class="bars"></div>
-          <p class="fine-print">Contagem demonstrativa, salva apenas neste navegador — não é uma votação centralizada.</p>
+          <p class="fine-print">Resultados consolidados da votação centralizada da turma.</p>
         </section>
       </section>
     </main>
     <footer><span>feito para a nossa turma</span><span>✦</span><span>cada escolha importa</span></footer>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/api/supabase-config.js"></script>
     <script src="script.js"></script>
   </body>
 </html>
