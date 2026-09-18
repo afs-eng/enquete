@@ -38,6 +38,7 @@ main{max-width:1240px;margin:auto;padding:40px 5vw 90px}.hero{min-height:330px;d
 .bar-row:first-child .bar-fill{background:var(--ink)}
 .bar-row strong{font:500 11px var(--mono);color:var(--ink);text-align:right}
 .watch-results{text-align:center;margin-top:32px}
+.votes-list-title{margin:34px 0 0}
 .votes-list{margin-top:20px;border-top:1px solid var(--line);padding-top:16px}
 .vote-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #eee}
 .vote-item:last-child{border-bottom:none}
