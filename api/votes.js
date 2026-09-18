@@ -129,6 +129,10 @@ async function createVote(req, res) {
       json(res, 409, { error: 'Este usuário já registrou um voto.' });
       return;
     }
+    if (response.status === 401) {
+      json(res, 401, { error: 'Sessão inválida ou expirada.' });
+      return;
+    }
     if (!response.ok) {
       json(res, 502, { error: 'Não foi possível registrar o voto.' });
       return;

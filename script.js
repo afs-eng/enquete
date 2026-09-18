@@ -261,8 +261,8 @@
         const latest = await supabaseClient.auth.getSession();
         const session = latest.data && latest.data.session;
         if (latest.error || !session || !session.access_token) {
-          setAuthMessage('Sua sessão expirou. Solicite um novo link de acesso.');
           await signOutAndReleaseEmail(false);
+          setAuthMessage('Sua sessão expirou. Solicite um novo link de acesso.');
           return;
         }
         applySession(session);
@@ -280,8 +280,8 @@
 
         if (!response.ok) {
           if (response.status === 401) {
-            setAuthMessage('Sua sessão expirou. Solicite um novo link de acesso.');
             await signOutAndReleaseEmail(false);
+            setAuthMessage('Sua sessão expirou. Solicite um novo link de acesso.');
           } else if (response.status === 409) {
             setMessage(emailMessage, 'Este usuário já registrou um voto.');
           } else {
