@@ -121,7 +121,32 @@ async function getTotals(res) {
       const shirtNumber = index + 1;
       return { shirtNumber: shirtNumber, total: totalsByShirt.get(shirtNumber) || 0 };
     });
-    json(res, 200, { totals: totals });
+
+    // Busca lista de votos individuais
+    let votes = [];
+    try {
+      const listRes = await fetch(endpoint('/rest/v1/rpc/vote_list'), {
+        method: 'POST',
+        headers: {
+          apikey: SUPABASE_PUBLISHABLE_KEY,
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
+        },
+        body: '{}'
+      });
+      if (listRes.ok) {
+        const rows = await readJson(listRes);
+        if (Array.isArray(rows)) {
+          votes = rows.map(function (row) {
+            return { name: String(row.name || ''), shirtNumber: Number(row.shirt_number) };
+          }).filter(function (v) { return v.name && Number.isInteger(v.shirtNumber); });
+        }
+      }
+    } catch (e) {
+      // votes fica vazio, totais continuam disponíveis
+    }
+
+    json(res, 200, { totals: totals, votes: votes });
   } catch (error) {
     json(res, 502, { error: 'Não foi possível consultar os resultados.' });
   }

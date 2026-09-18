@@ -40,3 +40,20 @@ $$;
 
 revoke all on function public.vote_totals() from public;
 grant execute on function public.vote_totals() to anon, authenticated;
+
+-- RPC para listar votos (nome + camisa) — dados não secretos
+create or replace function public.vote_list()
+returns table (name text, shirt_number integer)
+language sql
+security definer
+set search_path = pg_catalog, public, pg_temp
+as $$
+  select
+    votes.name,
+    votes.shirt_number::integer
+  from public.votes as votes
+  order by votes.created_at;
+$$;
+
+revoke all on function public.vote_list() from public;
+grant execute on function public.vote_list() to anon, authenticated;

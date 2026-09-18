@@ -143,6 +143,7 @@
   async function renderResults() {
     const totalVotes = document.querySelector('#totalVotes');
     const bars = document.querySelector('#bars');
+    const votesList = document.querySelector('#votesList');
     if (!bars) return;
 
     try {
@@ -168,9 +169,27 @@
         row.querySelector('strong').textContent = count;
         bars.appendChild(row);
       });
+
+      // Lista de votantes
+      if (votesList && Array.isArray(payload.votes)) {
+        votesList.textContent = '';
+        payload.votes.forEach(function (vote) {
+          const item = document.createElement('div');
+          item.className = 'vote-item';
+          item.innerHTML = '<span class="vote-name">' + escapeHtml(vote.name) + '</span><span class="vote-shirt">Modelo ' + String(vote.shirtNumber).padStart(2, '0') + '</span>';
+          votesList.appendChild(item);
+        });
+      }
     } catch (error) {
       setMessage(totalVotes, 'Resultados indisponíveis no momento.');
       bars.textContent = '';
+      if (votesList) votesList.textContent = '';
     }
+  }
+
+  function escapeHtml(str) {
+    var div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
   }
 }());
