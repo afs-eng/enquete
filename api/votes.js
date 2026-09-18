@@ -19,82 +19,31 @@ function endpoint(path) {
 function parseBody(body) {
   if (body && typeof body === 'object') return body;
   if (typeof body !== 'string' || !body.trim()) return null;
-  try {
-    return JSON.parse(body);
-  } catch (error) {
-    return null;
-  }
+  try { return JSON.parse(body); } catch (e) { return null; }
 }
 
 async function readJson(response) {
-  try {
-    return JSON.parse(await response.text());
-  } catch (error) {
-    return null;
-  }
+  try { return JSON.parse(await response.text()); } catch (e) { return null; }
 }
 
-function bearerToken(req) {
-  const header = req.headers && (req.headers.authorization || req.headers.Authorization);
-  if (typeof header !== 'string') return null;
-  const match = header.match(/^Bearer\s+(\S+)$/i);
-  return match ? match[1] : null;
+function validEmail(email) {
+  return email.length >= 3 && email.length <= 320 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
 function validateVote(body) {
   if (!body || Array.isArray(body)) return null;
-
   const name = typeof body.name === 'string' ? body.name.trim() : '';
+  const email = typeof body.email === 'string' ? body.email.trim() : '';
   const shirtNumber = body.shirtNumber;
   if (!name || Array.from(name).length > 80) return null;
+  if (!email || !validEmail(email)) return null;
   if (typeof shirtNumber !== 'number' || !Number.isInteger(shirtNumber) || shirtNumber < 1 || shirtNumber > 7) return null;
-
-  return { name: name, shirt_number: shirtNumber };
-}
-
-async function authenticatedUser(token) {
-  const response = await fetch(endpoint('/auth/v1/user'), {
-    method: 'GET',
-    headers: {
-      apikey: SUPABASE_PUBLISHABLE_KEY,
-      Authorization: 'Bearer ' + token,
-      Accept: 'application/json'
-    }
-  });
-
-  if (!response.ok) {
-    await readJson(response);
-    return { invalid: true };
-  }
-
-  const user = await readJson(response);
-  if (!user || typeof user.id !== 'string' || !user.id || typeof user.email !== 'string' || !user.email) {
-    return { invalid: true };
-  }
-  return { user: user };
+  return { name: name, email: email, shirt_number: shirtNumber };
 }
 
 async function createVote(req, res) {
   if (!configured()) {
     json(res, 500, { error: 'Serviço de votação indisponível.' });
-    return;
-  }
-
-  const token = bearerToken(req);
-  if (!token) {
-    json(res, 401, { error: 'Autenticação necessária.' });
-    return;
-  }
-
-  let identity;
-  try {
-    identity = await authenticatedUser(token);
-  } catch (error) {
-    json(res, 502, { error: 'Não foi possível validar a sessão.' });
-    return;
-  }
-  if (identity.invalid) {
-    json(res, 401, { error: 'Sessão inválida ou expirada.' });
     return;
   }
 
@@ -104,40 +53,26 @@ async function createVote(req, res) {
     return;
   }
 
-  const user = identity.user;
-  const record = {
-    user_id: user.id,
-    name: vote.name,
-    email: user.email,
-    shirt_number: vote.shirt_number
-  };
-
   try {
     const response = await fetch(endpoint('/rest/v1/votes'), {
       method: 'POST',
       headers: {
         apikey: SUPABASE_PUBLISHABLE_KEY,
-        Authorization: 'Bearer ' + token,
         'Content-Type': 'application/json',
         Prefer: 'return=minimal'
       },
-      body: JSON.stringify(record)
+      body: JSON.stringify(vote)
     });
 
     const errorBody = response.ok ? null : await readJson(response);
     if (errorBody && errorBody.code === '23505') {
-      json(res, 409, { error: 'Este usuário já registrou um voto.' });
-      return;
-    }
-    if (response.status === 401) {
-      json(res, 401, { error: 'Sessão inválida ou expirada.' });
+      json(res, 409, { error: 'Este e-mail já registrou um voto.' });
       return;
     }
     if (!response.ok) {
       json(res, 502, { error: 'Não foi possível registrar o voto.' });
       return;
     }
-
     json(res, 201, { success: true });
   } catch (error) {
     json(res, 502, { error: 'Não foi possível registrar o voto.' });
@@ -195,18 +130,8 @@ async function getTotals(res) {
 module.exports = async function handler(req, res) {
   res.setHeader('Allow', 'GET, POST, OPTIONS');
 
-  if (req.method === 'OPTIONS') {
-    res.statusCode = 204;
-    res.end();
-    return;
-  }
-  if (req.method === 'POST') {
-    await createVote(req, res);
-    return;
-  }
-  if (req.method === 'GET') {
-    await getTotals(res);
-    return;
-  }
+  if (req.method === 'OPTIONS') { res.statusCode = 204; res.end(); return; }
+  if (req.method === 'POST') { await createVote(req, res); return; }
+  if (req.method === 'GET') { await getTotals(res); return; }
   json(res, 405, { error: 'Método não permitido.' });
 };
