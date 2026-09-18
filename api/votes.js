@@ -141,9 +141,12 @@ async function getTotals(res) {
             return { name: String(row.name || ''), shirtNumber: Number(row.shirt_number) };
           }).filter(function (v) { return v.name && Number.isInteger(v.shirtNumber); });
         }
+      } else {
+        console.error('vote_list falhou:', listRes.status, await readJson(listRes));
       }
     } catch (e) {
       // votes fica vazio, totais continuam disponíveis
+      console.error('vote_list erro:', e && e.message);
     }
 
     json(res, 200, { totals: totals, votes: votes });
