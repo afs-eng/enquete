@@ -124,13 +124,20 @@
     }
   });
 
+  async function openResults() {
+    if (results) results.hidden = false;
+    await renderResults();
+    if (results) results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  const watchResults = document.querySelector('#watchResults');
+  if (watchResults) {
+    watchResults.addEventListener('click', openResults);
+  }
+
   const showResults = document.querySelector('#showResults');
   if (showResults) {
-    showResults.addEventListener('click', async function () {
-      if (results) results.hidden = false;
-      await renderResults();
-      if (results) results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    });
+    showResults.addEventListener('click', openResults);
   }
 
   async function renderResults() {
